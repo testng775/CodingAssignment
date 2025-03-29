@@ -1,0 +1,17 @@
+{
+  "name": "codingassignment",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@playwright/test": "^1.51.1",
+    "jest": "^29.7.0",
+    "playwright": "^1.51.1"
+  }
+}
