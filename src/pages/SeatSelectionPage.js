@@ -18,7 +18,7 @@ async seatSelection() {
 
     // Check if there are available seats
     if (seatCount === 0) {
-        console.log('No available seats.');
+     //   console.log('No available seats.');
         return;
     }
 
@@ -27,12 +27,8 @@ async seatSelection() {
 
     // Click the random seat for Passenger 1
     await availableSeats.nth(randomSeatNo).click();
-    console.log(`Selected seat for Passenger 1: ${randomSeatNo + 1}`);
+   // console.log(`Selected seat for Passenger 1: ${randomSeatNo + 1}`);
     
-    // Wait for the seat selection to complete by waiting for an element to update
-    //await this.page.waitForSelector('.seatmap__seat--standard:has-text("Included")'); // Wait for a seat to be marked as "Selected"
-    //await this.page.waitForSelector('.seat__seat--occupied');
-
 
     // Get the updated count of available seats after Passenger 1's selection
     const updatedSeatCount = await availableSeats.count();
@@ -53,35 +49,37 @@ await this.page.locator('.seatmap__seat--standard').nth(randomIndex2).waitFor({
   
   // Now click the seat
   await availableSeats.nth(randomIndex2).click();
-  console.log(`Selected seat for Passenger 2: ${randomIndex2 + 1}`);
+  //console.log(`Selected seat for Passenger 2: ${randomIndex2 + 1}`);
   
-        // Click the random seat for Passenger 2
-        await availableSeats.nth(randomIndex2).click();
-        console.log(`Selected seat for Passenger 2: ${randomIndex2 + 1}`);
+  // Click the random seat for Passenger 2
+  await availableSeats.nth(randomIndex2).click();
+  //  console.log(`Selected seat for Passenger 2: ${randomIndex2 + 1}`);
         
-        // Wait for the seat selection to complete (just wait for a selector or change in state)
-       // await this.page.waitForSelector('.seatmap__seat--standard:has-text("Selected")'); // Update with proper condition
     }
 }
 
-
-
-
 async nextFlightButton() {
-    // Wait for the button to be visible and ready to be clicked
-    await this.page.getByRole('button', { name: 'Next flight' }).click();
-
-    //await this.page.locator('button:has-text("Next flight")').waitFor({ state: 'attached' });
-    //await this.page.locator('button:has-text("Next flight")').waitFor({ state: 'visible' });
+    // Wait for the button to be visible and attached to the DOM before clicking
+    await this.page.getByRole('button', { name: 'Next flight' }).waitFor({
+        state: 'visible',  // Ensure the button is visible
+        timeout: 10000,     // Set a reasonable timeout of 10 seconds
+    });
 
     // Now click the button
-    //await this.page.locator('button:has-text("Next flight")').click({ force: true });
-
-    console.log('Force clicked the Next flight button');
+    await this.page.getByRole('button', { name: 'Next flight' }).click({ force: true });
+    await this.page.waitForTimeout(6000);
+    console.log('Clicked the Next flight button');
 
 }
 
-      
+async nextFlightSeatSelection(){
+    await this.page.getByRole('button', { name: ' Pick these seats ' }).click();
+
+
+
+
+}
+
 
 }
 

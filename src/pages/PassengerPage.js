@@ -1,6 +1,12 @@
 class PassengerPage{
 constructor(page){
 this.page=page;
+this.loginButton = this.page.getByRole('button', { name: 'Log in' });
+this.iframeSelector = 'iframe';
+this.emailTextbox = { name: 'email@email.com' };
+this.passwordTextbox = { name: 'Password' };
+this.loginSubmitSelector = { name: 'Log in' };
+
 this.passengerSection = this.page.locator('div[data-ref^="pax-details__ADT-"]'); 
 this.emailField = 'role=textbox[name="email"]';
 this.passwordField = 'role=textbox[name="password"]';
@@ -10,8 +16,6 @@ this.loginLaterLink='button:has-text("Log in later")';
 
 this.passenger1FirstName = '[name="form.passengers.ADT-0.name"]';
 this.passenger1LastName = '[name="form.passengers.ADT-0.surname"]';
-
-
 this.passenger2Title = '/html/body/app-root/flights-root/div/div/div/div/flights-lazy-content/flights-passengers/ry-spinner/pax-app-container/pax-app/ry-spinner/div/div/div[2]/pax-app-form-container/pax-app-form/form/pax-passenger-container[2]/pax-passenger/div/pax-passenger-details-container/pax-passenger-details/pax-passenger-details-form-container/pax-details-form/ry-dropdown/div[2]/button';
 this.passenger2TitleMr='//*[@id="title-0-error-message"]/div[2]/div/div/ry-dropdown-item[1]/button/div/div[1]'
 this.passenger2FirstName = '[name="form.passengers.ADT-1.name"]';
@@ -20,47 +24,55 @@ this.passenger2LastName = '[name="form.passengers.ADT-1.surname"]';
 
 }
 
+async getLoginFrame() {
+    const iframeElement = await this.page.waitForSelector(this.iframeSelector);
+    return await iframeElement.contentFrame();
+}
 
 async ryanairLoginSection(email, password)
 {
 //click Login Section
-await this.page.getByRole('button', { name: 'Log in' }).click();
+await this.loginButton.click();
+// Switch to iframe
+  const frame = await this.getLoginFrame();
 
 //Enter Email
-await this.page.locator('iframe').contentFrame().getByRole('textbox', { name: 'email@email.com' }).click();
-await this.page.locator('iframe').contentFrame().getByRole('textbox', { name: 'email@email.com' }).fill(email);
+const emailField = await frame.getByRole('textbox', this.emailTextbox);
+await emailField.click();
+await emailField.fill(email);
 await this.page.waitForTimeout(5000);
 
-//Enter Password
-await this.page.locator('iframe').contentFrame().getByRole('textbox', { name: 'Password' }).click();
-await this.page.locator('iframe').contentFrame().getByRole('textbox', { name: 'Password' }).fill(password);
+//Enter Passwordconst passwordField = await frame.getByRole('textbox', this.passwordTextboxSelector);
+const passwordField = await frame.getByRole('textbox', this.passwordTextbox);
+await passwordField.click();
+await passwordField.fill(password);
 await this.page.waitForTimeout(5000);
 
-//Click Login Button
-await this.page.locator('iframe').contentFrame().getByRole('button', { name: 'Log in' }).click();
-//await this.page.waitForTimeout(5000);
+// Submit login
+  const loginSubmit = await frame.getByRole('button', this.loginSubmitSelector);
+  await loginSubmit.click();
 
 }
 
 async flightTypeSelection(){
-    await this.page.waitForTimeout(5000);
+await this.page.waitForTimeout(5000);
 
-  const flightRegularSelection = await this.page.locator('th[data-e2e="fare-card-regular"]');
-  await flightRegularSelection.waitFor({ state: 'visible' });
- await flightRegularSelection.click();
+const flightRegularSelection = await this.page.locator('th[data-e2e="fare-card-regular"]');
+await flightRegularSelection.waitFor({ state: 'visible' });
+await flightRegularSelection.click();
 await this.page.waitForTimeout(5000);
 }
 
 async isPassengerSectionVisible() {
-    // Page Down using keyboard.press
+// Page Down using keyboard.press
 await this.page.keyboard.press('PageDown');
 
 // Check if the "Passengers" section is visible
-    const passengerSections=this.passengerSection;
-    // Get the number of matching elements ( passengers)
-    const count = await passengerSections.count();
+ const passengerSections=this.passengerSection;
+// Get the number of matching elements ( passengers)
+const count = await passengerSections.count();
 
-    // Check if all matching elements are visible
+// Check if all matching elements are visible
     for (let i = 0; i < count; i++) {
         const passenger = passengerSections.nth(i);
         const isVisible = await passenger.isVisible();
@@ -69,7 +81,7 @@ await this.page.keyboard.press('PageDown');
         }
     }
 
-    return true; // Return true if all sections are visible
+ return true; // Return true if all sections are visible
 }
 async isPassengerSectionDisabled() {
     // Check if the "Passengers" section is disabled
@@ -99,7 +111,7 @@ const passengerSections = this.passengerSection;
 // Get the number of matching elements (passengers)
 const count = await passengerSections.count();
 
-// Check if any of the matching elements (passenger sections) is enabled
+// Check if any of the matching elements passenger sections is enabled
 for (let i = 0; i < count; i++) {
     const passenger = passengerSections.nth(i);
     const isEnabled = await passenger.isEnabled();
@@ -110,9 +122,6 @@ for (let i = 0; i < count; i++) {
 
 return true; // Return true if all sections are disabled
 
-
-    // Ensure passenger section is active (not disabled)
-    //return await this.page.isEnabled(this.passengerSection);
 }
 
 
@@ -121,7 +130,6 @@ async clickLoginLater(){
 await this.page.keyboard.press('PageDown');
 await this.page.click('span.login-touchpoint__login-later');
 await this.page.waitForTimeout(5000);
-//await this.page.pause();
 }
 
 async isPassenger2TitleVisible() {
@@ -141,12 +149,12 @@ async isPassenger2TitleVisible() {
 }
 
 async fillPassengerData(passengerIndex, title, firstName, lastName) {
-    // Dynamically select the correct fields for title, first name, and last name based on passenger index
-    const titleSelector = passengerIndex === 1 ? this.passenger1Title : this.passenger2Title;
-    const firstNameInput = passengerIndex === 1 ? this.passenger1FirstName : this.passenger2FirstName;
-    const lastNameInput = passengerIndex === 1 ? this.passenger1LastName : this.passenger2LastName;
+// Dynamically select the correct fields for title, first name, and last name based on passenger index
+const titleSelector = passengerIndex === 1 ? this.passenger1Title : this.passenger2Title;
+const firstNameInput = passengerIndex === 1 ? this.passenger1FirstName : this.passenger2FirstName;
+const lastNameInput = passengerIndex === 1 ? this.passenger1LastName : this.passenger2LastName;
 
-    // Select Title for Passenger 1
+// Select Title for Passenger 1
     if (passengerIndex === 1) {
         // Wait for the Passenger 1 title dropdown button to be visible and click
         await this.page.locator('pax-passenger').filter({ hasText: 'Passenger 1 Adult Title -' }).getByRole('button').click();
@@ -190,7 +198,7 @@ async fillPassengerData(passengerIndex, title, firstName, lastName) {
 
 async clickContinueButton(){
     await this.page.getByRole('button', { name: 'Continue' }).click();
-   // await this.page.waitForTimeout(5000);
+    await this.page.waitForTimeout(5000);
     //await this.page.pause();
     }
 

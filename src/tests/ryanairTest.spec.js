@@ -84,15 +84,22 @@ await passengerPage.page.waitForTimeout(1000);  // Small wait before filling Pas
 await passengerPage.fillPassengerData(2, 'Mr', passenger2Data.firstName, passenger2Data.lastName); 
 await passengerPage.clickContinueButton();
 
-// User selects seat for first flight
-await seatSelectionPage.seatSelection();
-await seatSelectionPage.nextFlightButton();
+
 
 //==== 4.Choose any available seats and click [Next] -> “Where would you like to sit?” page for the second
 //======flight is loaded
 //=========================================================================================
 
+// User selects seat for first flight
 await seatSelectionPage.seatSelection();
+await seatSelectionPage.nextFlightButton();
+
+
+
+//==== 5.Choose any available seats and click [Continue] -> “What bags are you taking on board?” page is
+//======loaded
+//=========================================================================================
+await seatSelectionPage.nextFlightSeatSelection();
 
 
 
