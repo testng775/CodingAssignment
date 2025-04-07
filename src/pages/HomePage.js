@@ -20,7 +20,7 @@ this.acceptCookiesButton = 'button:has-text("Yes, I agree")'; // Adjust to match
 
 async navigate()
 {
-    await this.page.goto('https://www.ryanair.com/');
+    await this.page.goto('https://www.ryanair.com/ie/en');
     await this.handleCookiePopup();
 }
 
@@ -66,7 +66,7 @@ async selectFlightDates(month, day) {
     await this.page.getByText(day, { exact: true }).first().click();
 
     // Optionally wait for 1 second
-    await this.page.waitForTimeout(1000);
+    await this.page.waitForTimeout(4000);
 
     // Select return date dynamically (if required)
     await this.page.getByText('12').first().click();
