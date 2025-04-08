@@ -68,15 +68,61 @@ async nextFlightButton() {
     // Now click the button
     await this.page.getByRole('button', { name: 'Next flight' }).click({ force: true });
     await this.page.waitForTimeout(6000);
-    console.log('Clicked the Next flight button');
 
 }
 
-async nextFlightSeatSelection(){
-    await this.page.getByRole('button', { name: ' Pick these seats ' }).click();
+async flightContinueButton(){
+    await this.page.getByRole('button', { name: 'Continue' }).click();
 
+    // Wait for the button to be visible and attached to the DOM before clicking
+    await this.page.getByRole('button', { name: 'Continue' }).waitFor({
+        state: 'visible',  // Ensure the button is visible
+        timeout: 30000,     // Set a reasonable timeout of 10 seconds
+    });
 
+    // Now click the button
+    await this.page.getByRole('button', { name: 'Continue' }).click({ force: true });
+    await this.page.waitForTimeout(6000);
 
+}
+
+async handleFlightSeatPopup() {
+    try {
+        // Wait for the popup to be visible
+        await this.page.waitForSelector('.seats-offer__wrapper', { state: 'visible', timeout: 5000 });
+
+        // If the popup appears, wait for the "No, thanks" button to be visible and click on it
+        const noThanksButton = this.page.locator('button:has-text("No, thanks")');
+        
+        // Wait for the button to be attached and visible
+        await noThanksButton.waitFor({
+            state: 'attached',  // Ensure the button is attached to the DOM
+            timeout: 3000,      // Timeout for waiting for the button (3 seconds)
+        });
+
+        // Click the "No, thanks" button
+        await noThanksButton.click();
+
+        console.log('Clicked the "No, thanks" button');
+    } catch (error) {
+        // If the popup does not appear, continue with the test
+        console.log('No popup appeared, continuing with the test');
+    }
+}
+
+async flighttwowait(){
+    await this.page.waitForTimeout(5000);
+}
+
+async flightPopupFastTrack(){
+ await this.page.getByRole('button', { name: 'No, thanks' }).click();
+
+ const flightPopupFastTrackSelector = '.enhanced-takeover-beta__modal';
+ const noThanksButtonSelector = `${flightPopupFastTrackSelector} button:has-text("No, thanks")`;
+ 
+ if (await this.page.isVisible(flightPopupFastTrackSelector )) {
+   await this.page.click(noThanksButtonSelector);
+ }
 
 }
 

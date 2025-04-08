@@ -4,6 +4,7 @@ const HomePage = require('../pages/HomePage');
 const SearchResultsPage = require('../pages/SearchResultsPage'); 
 const PassengerPage=require('../pages/PassengerPage');
 const SeatSelectionPage = require('../pages/SeatSelectionPage');
+const BaggageSelectionPage = require('../pages/BaggageSelectionPage');
 
 const passenger1Data = { title: 'Mr', firstName: 'John', lastName: 'Doe' };
 const passenger2Data = { title: 'Mrs', firstName: 'Jane', lastName: 'Smith' };
@@ -13,6 +14,7 @@ test('Ryanair Flight Booking Process', async ({ page }) => {
   const searchResultsPage= new SearchResultsPage(page);
   const passengerPage=new PassengerPage(page);
   const seatSelectionPage = new SeatSelectionPage(page);
+  const baggageSelectionPage =new BaggageSelectionPage(page);
 //==========================================================================================================
 //======= TEST STEPS WITH ASSERTION (PRE STEPS)============================================================
 //====THE FOLLOWING SECTION IS COVERING PRE STEPS ========================================================
@@ -94,15 +96,18 @@ await passengerPage.clickContinueButton();
 await seatSelectionPage.seatSelection();
 await seatSelectionPage.nextFlightButton();
 
-
-
 //==== 5.Choose any available seats and click [Continue] -> “What bags are you taking on board?” page is
 //======loaded
 //=========================================================================================
-await seatSelectionPage.nextFlightSeatSelection();
+//await seatSelectionPage.nextFlightSeatSelection();
 
-
-
+//await seatSelectionPage.handleFlightSeatPopup();
+await seatSelectionPage.flightContinueButton();
+await seatSelectionPage.seatSelection();
+await seatSelectionPage.flighttwowait();
+await seatSelectionPage.flightContinueButton();
+await seatSelectionPage.flightPopupFastTrack();
+//await baggageSelectionPage.verifyTitleCabinBags();
 
 
 }

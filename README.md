@@ -1,6 +1,12 @@
 # Ryanair Flight Booking Test Automation
 
-This repository contains automated tests for booking a flight on Ryanair's website using Playwright and Page Object Model (POM) in JavaScript.
+This repository contains Automated test suite for booking a flight on Ryanair using Playwright (JavaScript) and Page Object Model.
+
+## Tech Stack
+- Playwright
+- JavaScript
+- Docker
+- Page Object Model (POM)
 
 ## Technical Requirements
 
@@ -23,11 +29,33 @@ To run these tests, the following tools and technologies are required:
 
 4. **Git** (for version control)
 
-5. **Browser (Chromium/Firefox/WebKit)**: Playwright automatically installs the necessary browsers.
+5. **Browser (Chromium)**: Playwright automatically installs the necessary browsers.
+
+
+## Test Flow
+
+1. Open Ryanair homepage
+2. Search for flights (e.g., Dublin to Barcelona, Sep 8 - Sep 12, 2 adults)
+3. Select "Regular" flight option
+4. Click "Log in later"
+5. Fill passenger details
+6. Select seats for both flights
+7. Navigate to the "Bags" page
 
 ## How to Execute the Tests
 
 ### 1. Clone the Repository
 First, clone the repository to your local machine:
-```bash
-git clone https://github.com/your-username/ryanair-flight-booking-test.git
+
+##git clone https://github.com/testng775/CodingAssignment.git
+
+### 2. Execute Test Locally on Visual Studio
+npm test
+
+### 3. Execute Test Locally on Docker Container
+1. Update  headless:false from playwright.config.js
+2. Build Docker Image - docker build -t ryanair-playwright-tests .
+3. Run Docker Container - docker run --rm ryanair-playwright-tests  
+
+
+
